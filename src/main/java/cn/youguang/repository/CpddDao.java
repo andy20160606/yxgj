@@ -29,7 +29,7 @@ public interface CpddDao extends JpaRepository<Cpdd, Long> {
 
     List<Cpdd> findByYhhd(Yhhd hdId, Sort s);
 
-    List<Cpdd> findByCpIsNotNull();
+    List<Cpdd> findByCpIsNotNull(Sort jpaSort);
 
     List<Cpdd> findByYdzt(Integer ydzt);
 

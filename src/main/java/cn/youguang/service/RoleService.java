@@ -42,7 +42,7 @@ public class RoleService {
 
 	public void findDataGrid(PageInfo pageInfo) {
 		System.out.println(pageInfo);
-		pageInfo.setRows(roleDao.findAll(pageInfo.getPagerequest()));
+		pageInfo.setRows(roleDao.findAll(pageInfo.getPagerequest()).getContent());
 		pageInfo.setTotal(roleDao.count());
 	}
 

@@ -3,21 +3,18 @@ package cn.youguang.service;
 
 import cn.youguang.dto.CpllDto;
 import cn.youguang.dto.HdllDto;
-import cn.youguang.dto.SjzlDto;
-import cn.youguang.entity.*;
+import cn.youguang.entity.Cp;
+import cn.youguang.entity.Sjrz;
+import cn.youguang.entity.Yhhd;
+import cn.youguang.entity.Zfrz;
 import cn.youguang.repository.*;
 import cn.youguang.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.rmi.activation.ActivationGroup;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.summingInt;
 
 //Spring Bean的标识.
 @Service
@@ -55,7 +52,7 @@ public class SjrzService {
 
 
     private Long getZlrs(List<Sjrz> sjrzs) {
-        Long count = sjrzs.stream().filter(a -> "ll".equals(a.getSjxw())).collect(Collectors.summingLong(b -> b.getCount()));
+        Long count = sjrzs.stream().filter(a -> "scll".equals(a.getSjxw())).collect(Collectors.summingLong(b -> b.getCount()));
         return count == null ? 0 : count;
     }
 
@@ -212,6 +209,86 @@ public class SjrzService {
         hdll.put("data3", data3);
 
 
+        return hdll;
+    }
+
+    public Map<String, List> getCpllWholeTime() {
+
+        List<Sjrz> sjrzs = sjrzDao.findByCpIsNotNull();
+
+        List<Cp> cps = cpDao.findAll();
+        Map<Long, Long> var1cpll = sjrzs.stream().collect(Collectors.groupingBy(a -> a.getCp().getId(), Collectors.summingLong(b -> b.getCount() == null ? 0L : b.getCount())));
+
+        List<String> cpmc;
+
+        List<Long> data1;
+        List<CpllDto> cpllDtos = new ArrayList<>();
+        for (Cp cp : cps) {
+
+            CpllDto cpllDto = new CpllDto();
+            cpllDto.setCpmc(cp.getCpmc());
+            cpllDto.setCpId(cp.getId());
+            cpllDto.setVar1(var1cpll.get(cp.getId()) == null ? 0L : var1cpll.get(cp.getId()));
+            cpllDtos.add(cpllDto);
+
+        }
+        cpllDtos.sort((o1, o2) -> {
+            if (o1.getVar1() >= o2.getVar1()) {
+                return 1;
+            }
+            return -1;
+        });
+
+        cpmc = cpllDtos.stream().map(CpllDto::getCpmc).collect(Collectors.toList());
+        data1 = cpllDtos.stream().map(CpllDto::getVar1).collect(Collectors.toList());
+
+        List<String> months = new ArrayList<>();
+        months.add("项目上线后浏览人数");
+
+        Map<String, List> cpll = new HashMap<>();
+        cpll.put("months", months);
+        cpll.put("cpmc", cpmc);
+        cpll.put("data1", data1);
+        return cpll;
+    }
+
+    public Map<String, List> getHdllWholeTime() {
+
+
+        List<Sjrz> sjrzs = sjrzDao.findByYhhdIsNotNull();
+
+        List<Yhhd> yhhds = yhhdDao.findAll();
+        Map<Long, Long> var1hdll = sjrzs.stream().collect(Collectors.groupingBy(a -> a.getYhhd().getId(), Collectors.summingLong(b -> b.getCount() == null ? 0L : b.getCount())));
+
+        List<String> hdmc;
+
+        List<Long> data1;
+        List<HdllDto> hdllDtos = new ArrayList<>();
+        for (Yhhd yhhd : yhhds) {
+            HdllDto hdllDto = new HdllDto();
+            hdllDto.setHdmc(yhhd.getHdmc());
+            hdllDto.setVar1(var1hdll.get(yhhd.getId()) == null ? 0L : var1hdll.get(yhhd.getId()));
+            hdllDtos.add(hdllDto);
+        }
+
+        hdllDtos.sort((o1, o2) -> {
+            if (o1.getVar1() >= o2.getVar1()) {
+                return 1;
+            }
+            return -1;
+        });
+
+        hdmc = hdllDtos.stream().map(a -> a.getHdmc()).collect(Collectors.toList());
+        data1 = hdllDtos.stream().map(a -> a.getVar1()).collect(Collectors.toList());
+
+        List<String> months = new ArrayList<>();
+        months.add("项目上线后浏览人数");
+
+
+        Map<String, List> hdll = new HashMap<>();
+        hdll.put("months", months);
+        hdll.put("hdmc", hdmc);
+        hdll.put("data1", data1);
         return hdll;
     }
 

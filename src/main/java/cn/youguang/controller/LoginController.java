@@ -24,11 +24,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import weixin.popular.api.SnsAPI;
 import weixin.popular.bean.sns.SnsToken;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
@@ -127,7 +131,7 @@ public class LoginController {
         loginDto.setPassword(username);
         loginDto.setUsername(password);
         loginDto.setVerifycode(verifycode);
-        return loginPost(loginDto, httpServletRequest);
+        return loginPost(loginDto);
 
     }
 
@@ -143,9 +147,14 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     @SuppressWarnings(value = "all")
-    public Result loginPost(@RequestBody LoginDto loginDto, HttpServletRequest request) {
+    public Result loginPost(@RequestBody LoginDto loginDto) {
 
         LOGGER.info("POST请求登录");
+        HttpServletRequest request = null;
+        if (StringUtils.isNotBlank(loginDto.getVerifycode())) {
+            request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        }
+
         String username = loginDto.getUsername();
         String password = loginDto.getPassword();
         // String loginpass = Hex.encodeHexString(password.getBytes());//变原文密码为密文密码
@@ -235,7 +244,7 @@ public class LoginController {
             result.setMsg("密码错误");
             return result;
         } catch (Exception e) {
-            result.setMsg("登录失败");
+            result.setMsg("登录失败{ " + e.getMessage() +"}");
             return result;
         }
         result.setSuccess(true);
@@ -297,7 +306,6 @@ public class LoginController {
     @RequestMapping(value = "/verifyCode", method = RequestMethod.GET)
     public void verifyCode(HttpServletRequest request, HttpServletResponse response) {
         String verifyCode = VerifyCodeUtil.generateTextCode(VerifyCodeUtil.TYPE_NUM_ONLY, 4, null);
-        System.out.println("verifyCode=" + verifyCode);
         BufferedImage bufferedImage = VerifyCodeUtil.generateImageCode(verifyCode, 90, 30, 10, true, Color.WHITE, Color.BLACK, null);
         request.getSession().setAttribute("verifyCode", verifyCode);
         try {

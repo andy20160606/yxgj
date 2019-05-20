@@ -128,7 +128,7 @@ public class UserService {
 				users = userDao.findAll(pageInfo.getPagerequest());
 			}
 
-			pageInfo.setRows(users);
+			pageInfo.setRows(users.getContent());
 			pageInfo.setTotal(users.getTotalElements());
 		} catch (Exception e) {
 			e.printStackTrace();

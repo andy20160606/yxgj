@@ -16,4 +16,8 @@ public interface SjrzDao extends JpaRepository<Sjrz, Long> {
 
     Sjrz findByCpAndYhhdAndSjrqAndSjxw(Cp cp, Yhhd yhhd, Date sjrq, String sjxw);
     List<Sjrz> findBySjrqBetween(Date starttime,Date stoptime);
+
+    List<Sjrz> findByYhhdIsNotNull();
+    List<Sjrz> findByCpIsNotNull();
+
 }

@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description：行业管理
+ * @description：产品管理
  */
 @Controller
 @RequestMapping("/cp")

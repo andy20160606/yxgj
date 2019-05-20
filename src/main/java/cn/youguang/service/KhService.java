@@ -65,10 +65,15 @@ public class KhService {
         Integer type = (Integer) pageInfo.getCondition().get("type");
         Page<Kh> khs;
 
-        List<Cp> cps = cpDao.findAll();
-        if (StringUtils.isNotBlank(khmc) && StringUtils.isNotBlank(sjhm)) {
-            khs = khDao.findByKhmcContainingAndSjhmContainingAndType(khmc,sjhm,type,pageInfo.getPagerequest());
-        } else if (StringUtils.isNotBlank(khmc) && StringUtils.isNotBlank(sjhm)) {
+        if (type != null && StringUtils.isNotBlank(khmc) && StringUtils.isNotBlank(sjhm)) {
+            khs = khDao.findByKhmcContainingAndSjhmContainingAndType(khmc, sjhm, type, pageInfo.getPagerequest());
+        } else if (type != null && StringUtils.isNotBlank(khmc)) {
+            khs = khDao.findByKhmcContainingAndType(khmc, type, pageInfo.getPagerequest());
+        } else if (type != null && StringUtils.isNotBlank(sjhm)) {
+            khs = khDao.findBySjhmContainingAndType(sjhm, type,pageInfo.getPagerequest());
+        } else if (type != null) {
+            khs = khDao.findByType(type, pageInfo.getPagerequest());
+        } else if (StringUtils.isNotBlank(sjhm) && StringUtils.isNotBlank(khmc)) {
             khs = khDao.findByKhmcContainingAndSjhmContaining(khmc, sjhm, pageInfo.getPagerequest());
         } else if (StringUtils.isNotBlank(khmc)) {
             khs = khDao.findByKhmcContaining(khmc, pageInfo.getPagerequest());

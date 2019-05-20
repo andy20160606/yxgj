@@ -30,9 +30,6 @@ public class UserCredentialsMatcher extends SimpleCredentialsMatcher {
     @Value("${wx.secret}")
     private String secret;
 
-    @Value("${wx.openid.sign.login}")
-    private String wxsign;
-
 
     @Autowired
     private KhService khService;

@@ -26,7 +26,7 @@ public class Sjrz extends IdEntity {
     @ManyToOne
     private Yhhd yhhd;
 
-    private String sjxw; //数据行为 ： zf or ll
+    private String sjxw; //数据行为 ： zf or ll or scll(商城浏览)
 
     private Long count; //次数
 

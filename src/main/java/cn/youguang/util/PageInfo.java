@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
@@ -107,12 +108,7 @@ public class PageInfo {
         this.rows = rows;
     }
 
-    public void setRows(Iterable rows) {
-        this.rows = new ArrayList();
-        for (Object object : rows) {
-            this.rows.add(object);
-        }
-    }
+
 
 
     public int getFrom() {
@@ -177,7 +173,7 @@ public class PageInfo {
      *
      * @return
      */
-    public PageRequest getPagerequest() {
+    public Pageable getPagerequest() {
         Sort prsort;
         if ("asc".equals(order)) {
             prsort = new Sort(new Order(Direction.ASC, this.sort));
@@ -187,6 +183,15 @@ public class PageInfo {
 
         return new PageRequest(nowpage - 1, pagesize, prsort);
     }
+
+    public Sort getJpaSort() {
+        if ("asc".equals(order)) {
+            return new Sort(new Order(Direction.ASC, this.sort));
+        } else {
+            return new Sort(new Order(Direction.DESC, this.sort));
+        }
+    }
+
 
     @Override
     public String toString() {

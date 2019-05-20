@@ -44,9 +44,6 @@ public class UserController {
     @Value("${wx.secret}")
     private String secret;
 
-    @Value("${wx.openid.sign.login}")
-    private String wxsign;
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -216,61 +213,6 @@ public class UserController {
 //            return result;
 //        }
 //    }
-
-//
-//    @RequestMapping(value = "getUserInfoByCode", method = RequestMethod.GET)
-//    @ResponseBody
-//    @SuppressWarnings(value = "all")
-//    public Result getUserInfoByCode(@RequestParam String code) {
-//        Result result = new Result();
-//        try {
-//            SnsToken snsToken = SnsAPI.oauth2AccessToken(appid, secret, code);
-//            weixin.popular.bean.user.User wxuser = SnsAPI.userinfo(snsToken.getAccess_token(), snsToken.getOpenid(), "zh_CN");
-//            if(wxuser.isSuccess()){
-//                User userdb = userService.findByOpenid(wxuser.getOpenid());
-//                if(userdb == null) {
-//                    userdb = userService.initUserFromWxUser(wxuser);
-//                    userdb = userService.saveUser(userdb);
-//                }
-//
-//                Subject user = SecurityUtils.getSubject();
-//                UsernamePasswordToken token = new UsernamePasswordToken(wxsign, userdb.getWxopenid());
-//                //UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-//                token.setRememberMe(true);
-//                try {
-//                    user.login(token);
-//                } catch (UnknownAccountException e) {
-//                    LOGGER.error("账号不存在：{}", e);
-//                    result.setMsg("账号不存在");
-//                    return result;
-//                } catch (DisabledAccountException e) {
-//                    LOGGER.error("账号未启用：{}", e);
-//                    result.setMsg("账号未启用");
-//                    return result;
-//                } catch (IncorrectCredentialsException e) {
-//                    LOGGER.error("密码错误：{}", e);
-//                    result.setMsg("密码错误");
-//                    return result;
-//                } catch (RuntimeException e) {
-//                    LOGGER.error("未知错误,请联系管理员：{}", e);
-//                    result.setMsg("未知错误,请联系管理员");
-//                    return result;
-//                }
-//
-//
-//
-//
-//                result.setSuccess(true);
-//                result.setObj(userdb);
-//            }
-//        } catch (Exception e){
-//            result.setSuccess(false);
-//            result.setMsg(e.getMessage());
-//        }
-//
-//        return result;
-//    }
-//
 
 
     @RequestMapping(value = "getUserById", method = RequestMethod.GET)

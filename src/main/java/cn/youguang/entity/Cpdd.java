@@ -24,6 +24,7 @@ public class Cpdd extends IdEntity {
 
     private String khdz; //客户地址
 
+
     private String khsp; //客戶商鋪
 
     private String qtxx; //其他信息
@@ -33,6 +34,10 @@ public class Cpdd extends IdEntity {
     private Integer ydzt;  //阅读状态 0代表未读 1代表已读
 
     private Integer rydzt; //人阅读状态  0代表未读 1代表已读
+
+    private Integer active; //激活属性
+
+    private String sjsjy;
 
 
     private String tclx;   //套餐类型
@@ -48,6 +53,24 @@ public class Cpdd extends IdEntity {
 
     public void setYdzt(Integer ydzt) {
         this.ydzt = ydzt;
+    }
+
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
+    }
+
+
+    public String getSjsjy() {
+        return sjsjy;
+    }
+
+    public void setSjsjy(String sjsjy) {
+        this.sjsjy = sjsjy;
     }
 
     @ManyToOne

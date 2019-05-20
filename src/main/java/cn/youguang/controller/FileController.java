@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -70,10 +68,9 @@ public class FileController {
         if (fileName != null) {
             //设置文件路径
             File file = new File(filePath +fileName);
-            //File file = new File(realPath , fileName);
             if (file.exists()) {
-            //    response.setContentType("application/force-download");// 设置强制下载不打开
-                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+                response.addHeader("Content-Disposition", "fileName=" + fileName);// 设置文件名
+
                 byte[] buffer = new byte[1024];
                 FileInputStream fis = null;
                 BufferedInputStream bis = null;

@@ -129,8 +129,8 @@ public class CpddService {
     }
 
 
-    public List<Cpdd> findListOnlyCps() {
-        return cpddDao.findByCpIsNotNull();
+    public List<Cpdd> findListOnlyCps(PageInfo pageInfo) {
+        return cpddDao.findByCpIsNotNull(pageInfo.getJpaSort());
     }
 
     public List<Cpdd> findListByDqzt(Integer ydzt) {
@@ -194,6 +194,14 @@ public class CpddService {
 
     public void updateRydztToOneUsingIds(Long[] ids) {
         cpddDao.updateRydztToOneUsingCp(Arrays.asList(ids));
+
+    }
+
+
+    public List<Cpdd> findListByHdIdAndPageInfo(Long hdId, PageInfo pageInfo) {
+        Yhhd yhhd = yhhdDao.findOne(hdId);
+        return cpddDao.findByYhhd(yhhd, pageInfo.getJpaSort());
+
 
     }
 }

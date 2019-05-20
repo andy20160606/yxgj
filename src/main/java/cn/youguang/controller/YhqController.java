@@ -30,7 +30,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/yhq")
-@Api(value = "优惠券Controller",tags = {"优惠券操作接口"})
+@Api(value = "优惠券Controller", tags = {"优惠券操作接口"})
 public class YhqController {
 
     @InitBinder
@@ -43,8 +43,6 @@ public class YhqController {
     private static final Logger LOGGER = LoggerFactory.getLogger(YhqController.class);
 
 
-
-
     @Autowired
     private YhhdService yhhdService;
 
@@ -55,18 +53,18 @@ public class YhqController {
     private UserService userService;
 
 
-
     /**
-     *  分页读取优惠券
+     * 分页读取优惠券
+     *
      * @param userId
      * @param pageInfo
      * @return
      */
 
-    @ApiOperation(value="分页获取优惠券信息",notes="pageinfo必须给定nowpage（当前页），pagesize（每页的记录数信息）,sort为排序（默认id，可给可不给）")
-    @RequestMapping(value = "datatables",method = RequestMethod.GET)
+    @ApiOperation(value = "分页获取优惠券信息", notes = "pageinfo必须给定nowpage（当前页），pagesize（每页的记录数信息）,sort为排序（默认id，可给可不给）")
+    @RequestMapping(value = "datatables", method = RequestMethod.GET)
     @ResponseBody
-    public PageInfo dataTables(@ApiParam(name="userId",value="用户ID")@RequestParam(required = false) Long userId, @ModelAttribute PageInfo pageInfo) {
+    public PageInfo dataTables(@ApiParam(name = "userId", value = "用户ID") @RequestParam(required = false) Long userId, @ModelAttribute PageInfo pageInfo) {
 
 
         Map<String, Object> condition = new HashMap<String, Object>();
@@ -80,52 +78,52 @@ public class YhqController {
     }
 
 
-    @ApiOperation(value="使用优惠券")
-    @RequestMapping(value = "use",method = RequestMethod.GET)
+    @ApiOperation(value = "使用优惠券")
+    @RequestMapping(value = "use", method = RequestMethod.GET)
     @ResponseBody
-    public Result use(@ApiParam(name="yhqId",value="yhqId")@RequestParam Long yhqId){
+    public Result use(@ApiParam(name = "yhqId", value = "yhqId") @RequestParam Long yhqId) {
 
 
         Result result = new Result();
 
-       try {
-           Yhq yhq = yhqService.findById(yhqId);
-           if(yhq.getYxzt() == 1){
-               result.setMsg("优惠券已使用过，不可重复使用");
-               return result;
-           }
-           yhq.setYxzt(1);
-           yhqService.save(yhq);
-           result.setMsg("优惠券使用成功");
-           result.setSuccess(true);
-       } catch (Exception e){
-           result.setMsg(e.getMessage());
-       }
+        try {
+            Yhq yhq = yhqService.findById(yhqId);
+            if (yhq.getYxzt() != null && yhq.getYxzt() == 1) {
+                result.setMsg("优惠券已使用过，不可重复使用");
+                return result;
+            }
+            yhq.setYxzt(1);
+            yhqService.save(yhq);
+            result.setMsg("优惠券使用成功");
+            result.setSuccess(true);
+        } catch (Exception e) {
+            result.setMsg(e.getMessage());
+        }
         return result;
 
     }
 
-    @ApiOperation(value="集合获取优惠券信息",notes="userId为查询条件")
-    @RequestMapping(value = "list",method = RequestMethod.GET)
+    @ApiOperation(value = "集合获取优惠券信息", notes = "userId为查询条件")
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     @ResponseBody
-    public Result list(@ApiParam(name="userId",value="用户ID")@RequestParam(required = false) Long userId){
+    public Result list(@ApiParam(name = "userId", value = "用户ID") @RequestParam Long userId) {
 
 
         Result result = new Result();
-        Map<String, Object> condition = new HashMap();
+        Map<String, Object> condition = new HashMap<String, Object>();
         List<Yhq> yhqs;
 
         if (userId != null) {
             condition.put("userId", userId);
         }
 
-       try {
-           yhqs =  yhqService.findList(condition);
-           result.setObj(yhqs);
-           result.setSuccess(true);
-       } catch (Exception e){
-           result.setMsg(e.getMessage());
-       }
+        try {
+            yhqs = yhqService.findList(condition);
+            result.setObj(yhqs);
+            result.setSuccess(true);
+        } catch (Exception e) {
+            result.setMsg(e.getMessage());
+        }
         return result;
 
     }
@@ -136,26 +134,25 @@ public class YhqController {
      *
      * @return
      */
-  //  @RequiresPermissions(value = "/yhq/add")
-    @RequestMapping(value = "/add" , method = RequestMethod.POST)
+    //  @RequiresPermissions(value = "/yhq/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Result add(@RequestParam Long userId,@RequestParam Long yhhdId) {
+    public Result add(@RequestParam Long userId, @RequestParam Long yhhdId) {
 
         Result result = new Result();
         try {
 
-            if(yhqService.check(userId,yhhdId) != null) {
+            if (yhqService.check(userId, yhhdId) != null) {
                 result.setSuccess(false);
                 result.setMsg("该活动已经参与过，不可重复获得优惠券");
                 return result;
             }
             User user = userService.findUserById(userId);
             Yhhd yhhd = yhhdService.findById(yhhdId);
-            Yhq yhq = yhqService.initFromYhhdAndUser(yhhd,user);
-            yhq.setYhm(UUID.randomUUID().toString());
+            Yhq yhq = yhqService.initFromYhhdAndUser(yhhd, user);
             yhqService.save(yhq);
             result.setSuccess(true);
-        } catch (Exception e){
+        } catch (Exception e) {
             result.setMsg(e.getMessage());
 
         }
@@ -171,7 +168,7 @@ public class YhqController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/edit",method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
     public Result edit(@RequestBody Yhhd yhhd) {
         Result result = new Result();
@@ -183,10 +180,6 @@ public class YhqController {
         }
         return result;
     }
-
-
-
-
 
 
 }

@@ -33,9 +33,6 @@ public class UserRealm extends AuthorizingRealm {
     @Autowired
     private RoleService roleService;
 
-    @Value("${wx.openid.sign.login}")
-    private String wxsign;
-
     /**
      * 为当前登录的Subject授予角色和权限
      */

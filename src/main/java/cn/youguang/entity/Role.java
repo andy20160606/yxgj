@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name="t_role")
 public class Role extends IdEntity {
 
-	@NotBlank
     private String name;
     private Integer seq;
     private String description;

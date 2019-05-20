@@ -135,13 +135,13 @@ public class CpddController {
     @ApiOperation(value = "集合获取产品订单信息", notes = "Yhhd ID 为查询条件")
     @RequestMapping(value = "listByHdId", method = RequestMethod.GET)
     @ResponseBody
-    public Result listByHdId(@ApiParam(name = "hdId", value = "活动Id") @RequestParam Long hdId) {
+    public Result listByHdId(@ModelAttribute PageInfo pageInfo, @ApiParam(name = "hdId", value = "活动Id") @RequestParam Long hdId) {
 
         Result result = new Result();
         List<Cpdd> cpdds;
 
         try {
-            cpdds = cpddService.findListByHdId(hdId);
+            cpdds = cpddService.findListByHdIdAndPageInfo(hdId, pageInfo);
             result.setObj(cpdds);
             result.setSuccess(true);
         } catch (Exception e) {
@@ -155,13 +155,13 @@ public class CpddController {
     @ApiOperation(value = "集合获取产品(仅限于产品)订单信息", notes = "Yhhd ID 为查询条件")
     @RequestMapping(value = "listOnlyCps", method = RequestMethod.GET)
     @ResponseBody
-    public Result listOnlyCps() {
+    public Result listOnlyCps(@ModelAttribute PageInfo pageInfo) {
 
         Result result = new Result();
         List<Cpdd> cpdds;
 
         try {
-            cpdds = cpddService.findListOnlyCps();
+            cpdds = cpddService.findListOnlyCps(pageInfo);
             result.setObj(cpdds);
             result.setSuccess(true);
         } catch (Exception e) {
@@ -198,7 +198,6 @@ public class CpddController {
     public Result groupByYhhdAndCpUseYdzt(@RequestParam Integer ydzt) {
 
         Result result = new Result();
-        Map<String, Long> data = new HashMap<>();
         List<Map<String, String>> list = new ArrayList<>();
         try {
             list = cpddService.groupByYhhdAndCpUseYdzt(ydzt);
@@ -302,6 +301,8 @@ public class CpddController {
             cpdd.setXdsj(new Date());
             cpdd = cpddService.save(cpdd);
             cpdd.setYdzt(0);
+            cpdd.setActive(1);
+            cpdd.setRydzt(0);
             result.setObj(cpdd);
             result.setSuccess(true);
         } catch (Exception e) {
@@ -351,11 +352,13 @@ public class CpddController {
     public Result delete(@RequestParam Long id) {
         Result result = new Result();
         try {
-            cpddService.delete(id);
-            result.setMsg("删除成功！");
+            Cpdd cpdd = cpddService.findById(id);
+            cpdd.setActive(0);
+            cpddService.save(cpdd);
+            result.setMsg("隐藏成功！");
             result.setSuccess(true);
         } catch (RuntimeException e) {
-            LOGGER.error("删除用户失败：{}", e);
+            LOGGER.error("隐藏成功：{}", e);
             result.setMsg(e.getMessage());
 
         }

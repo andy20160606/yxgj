@@ -97,13 +97,12 @@ public class SjrzController {
     //todo
 
 
-
     @RequestMapping(value = "/getHdllByMonth", method = RequestMethod.GET)
     @ResponseBody
     public Result getHdllByMonth(@RequestParam(name = "date") Date date) {
         Result result = new Result();
         try {
-            Map<String, List> zlrs = sjrzService.getHdllByMonth(date);
+            Map<String, List> zlrs = sjrzService.getHdllWholeTime();
             result.setObj(zlrs);
             result.setSuccess(true);
 
@@ -120,7 +119,7 @@ public class SjrzController {
     public Result getCpllByMonth(@RequestParam(name = "date") Date date) {
         Result result = new Result();
         try {
-            Map<String, List> zlrs = sjrzService.getCpllByMonth(date);
+            Map<String, List> zlrs = sjrzService.getCpllWholeTime();
             result.setObj(zlrs);
             result.setSuccess(true);
 

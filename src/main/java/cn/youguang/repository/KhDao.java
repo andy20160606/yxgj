@@ -23,5 +23,14 @@ public interface KhDao extends JpaRepository<Kh, Long> {
 
     Kh findByLoginname(String loginname);
 
+
+    Page<Kh> findByKhmcContainingOrSjhmContainingOrType(String khmc, String sjhm, Integer type, Pageable pageable);
+
     Page<Kh> findByKhmcContainingAndSjhmContainingAndType(String khmc, String sjhm, Integer type, Pageable pageable);
+
+    Page<Kh> findByKhmcContainingAndType(String khmc, Integer type, Pageable pageable);
+
+    Page<Kh> findByType(Integer type, Pageable pageable);
+
+    Page<Kh> findBySjhmContainingAndType(String sjhm, Integer type, Pageable pageable);
 }

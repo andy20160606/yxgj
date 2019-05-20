@@ -40,9 +40,6 @@ public class Kh extends IdEntity {
         return vip;
     }
 
-    @Transient
-    private List<Cp> khOtherCps;
-
 
     private Integer vip;
 

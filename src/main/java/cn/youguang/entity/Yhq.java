@@ -88,4 +88,6 @@ public class Yhq extends IdEntity {
     public void setYxzt(Integer yxzt) {
         this.yxzt = yxzt;
     }
+
+
 }

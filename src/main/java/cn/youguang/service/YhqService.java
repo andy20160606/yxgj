@@ -22,86 +22,80 @@ import java.util.Map;
 public class YhqService {
 
 
+    @Autowired
+    private YhqDao yhqDao;
 
-	@Autowired
-	private YhqDao yhqDao;
+    @Autowired
+    private UserDao userDao;
 
-	@Autowired
-	private UserDao userDao;
-
-	@Autowired
-	private YhhdDao yhhdDao;
-
+    @Autowired
+    private YhhdDao yhhdDao;
 
 
-	public void save(Yhq yhq) {
-		yhqDao.save(yhq);
-	}
+    public void save(Yhq yhq) {
+        yhqDao.save(yhq);
+    }
 
 
-	public Yhq findById(Long id){
+    public Yhq findById(Long id) {
 
 
-		return yhqDao.findOne(id);
-	}
-
-
-
+        return yhqDao.findOne(id);
+    }
 
 
     public void findDataTables(PageInfo pageInfo) {
 
-		Page<Yhq> yhqs;
-		Long userId = (Long) pageInfo.getCondition().get("userId");
+        Page<Yhq> yhqs;
+        Long userId = (Long) pageInfo.getCondition().get("userId");
 
 
-		if(userId != null){
-			User user = userDao.findById(userId);
-			yhqs = yhqDao.findByUser(user,pageInfo.getPagerequest());
-		} else {
-			yhqs = yhqDao.findAll(pageInfo.getPagerequest());
-		}
+        if (userId != null) {
+            User user = userDao.findById(userId);
+            yhqs = yhqDao.findByUser(user, pageInfo.getPagerequest());
+        } else {
+            yhqs = yhqDao.findAll(pageInfo.getPagerequest());
+        }
 
 
-
-		pageInfo.setRows(yhqs.getContent());
-		pageInfo.setTotal(yhqs.getTotalElements());
+        pageInfo.setRows(yhqs.getContent());
+        pageInfo.setTotal(yhqs.getTotalElements());
 
 
     }
 
-	public List<Yhq> findList(Map<String, Object> condition) {
+    public List<Yhq> findList(Map<String, Object> condition) {
 
-		Long userId = (Long) condition.get("userId");
-		List<Yhq> yhqs;
-		if(userId != null){
-			User user = userDao.findById(userId);
-			yhqs = yhqDao.findByUser(user);
-		} else {
-			yhqs = yhqDao.findAll();
-		}
+        Long userId = (Long) condition.get("userId");
+        List<Yhq> yhqs;
+        if (userId != null) {
+            User user = userDao.findById(userId);
+            yhqs = yhqDao.findByUser(user);
+        } else {
+            yhqs = yhqDao.findAll();
+        }
 
-		return yhqs;
+        return yhqs;
 
-	}
+    }
 
-	public Yhq check(Long userId, Long yhhdId) {
-		User user = userDao.findById(userId);
-		Yhhd yhhd = yhhdDao.findOne(yhhdId);
-		Yhq yhq =  yhqDao.findByUserAndYhhd(user,yhhd);
-		return  yhq;
+    public Yhq check(Long userId, Long yhhdId) {
+        User user = userDao.findById(userId);
+        Yhhd yhhd = yhhdDao.findOne(yhhdId);
+        Yhq yhq = yhqDao.findByUserAndYhhd(user, yhhd);
+        return yhq;
 
-	}
+    }
 
 
-
-	public Yhq initFromYhhdAndUser(Yhhd yhhd, User user) {
-		Yhq yhq = new Yhq();
-		yhq.setJe(yhhd.getJe());
-		yhq.setKsrq(yhhd.getKsrq());
-		yhq.setJsrq(yhhd.getJsrq());
-		yhq.setYhhd(yhhd);
-		yhq.setUser(user);
-		return yhq;
-	}
+    public Yhq initFromYhhdAndUser(Yhhd yhhd, User user) {
+        Yhq yhq = new Yhq();
+        yhq.setJe(yhhd.getJe());
+        yhq.setKsrq(yhhd.getKsrq());
+        yhq.setJsrq(yhhd.getJsrq());
+        yhq.setYhhd(yhhd);
+        yhq.setUser(user);
+        yhq.setYhm(System.currentTimeMillis() + "");
+        return yhq;
+    }
 }

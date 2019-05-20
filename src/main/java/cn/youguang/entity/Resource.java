@@ -26,7 +26,6 @@ public class Resource extends IdEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@NotBlank
     private String name;
     private Integer seq;
     private String description;

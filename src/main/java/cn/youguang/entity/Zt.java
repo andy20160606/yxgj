@@ -51,4 +51,15 @@ public class Zt extends IdEntity {
     public void setZtmc(String ztmc) {
         this.ztmc = ztmc;
     }
+
+
+    @Override
+    public String toString() {
+        return "Zt{" +
+                "ztmc='" + ztmc + '\'' +
+                ", status=" + status +
+                ", cps=" + cps +
+                ", id=" + id +
+                "} " + super.toString();
+    }
 }

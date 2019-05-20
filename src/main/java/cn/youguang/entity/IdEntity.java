@@ -29,6 +29,12 @@ public abstract class IdEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
 
+
+	@Override
+	public String toString() {
+		return "IdEntity{" +
+				"id=" + id +
+				'}';
+	}
 }

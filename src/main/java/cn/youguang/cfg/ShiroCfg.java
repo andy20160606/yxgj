@@ -82,7 +82,7 @@ public class ShiroCfg {
         realms.add(getKhRealm());
         dwsm.setRealms(realms);
         dwsm.setCacheManager(getEhCacheManager());
-        dwsm.setRememberMeManager(rememberMeManager());
+    //    dwsm.setRememberMeManager(rememberMeManager());
         return dwsm;
     }
 
@@ -93,30 +93,30 @@ public class ShiroCfg {
      * @return
      */
 
-    @Bean
-    public SimpleCookie rememberMeCookie() {
-
-        System.out.println("ShiroConfiguration.rememberMeCookie()");
-        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
-        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-        //<!-- 记住我cookie生效时间30天 ,单位秒;-->
-        simpleCookie.setMaxAge(259200);
-        return simpleCookie;
-    }
-
-    /**
-     * cookie管理对象;
-     *
-     * @return
-     */
-    @Bean
-    public CookieRememberMeManager rememberMeManager() {
-
-        System.out.println("ShiroConfiguration.rememberMeManager()");
-        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(rememberMeCookie());
-        return cookieRememberMeManager;
-    }
+//    @Bean
+//    public SimpleCookie rememberMeCookie() {
+//
+//        System.out.println("ShiroConfiguration.rememberMeCookie()");
+//        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+//        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+//        //<!-- 记住我cookie生效时间30天 ,单位秒;-->
+//        simpleCookie.setMaxAge(259200);
+//        return simpleCookie;
+//    }
+//
+//    /**
+//     * cookie管理对象;
+//     *
+//     * @return
+//     */
+//    @Bean
+//    public CookieRememberMeManager rememberMeManager() {
+//
+//        System.out.println("ShiroConfiguration.rememberMeManager()");
+//        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+//        cookieRememberMeManager.setCookie(rememberMeCookie());
+//        return cookieRememberMeManager;
+//    }
 
 
     @Bean(name = "lifecycleBeanPostProcessor")
@@ -161,8 +161,8 @@ public class ShiroCfg {
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/wxlogin", "anon");
         filterChainDefinitionMap.put("/verifyCode", "anon");
-//        filterChainDefinitionMap.put("/**", "anon");
-        filterChainDefinitionMap.put("/**", " anon");
+        filterChainDefinitionMap.put("/**", "anon");
+        //       filterChainDefinitionMap.put("/**", " authc");
 //        filterChainDefinitionMap.put("/js*//**//**", "anon");
         shiroFilterFactoryBean
                 .setFilterChainDefinitionMap(filterChainDefinitionMap);
