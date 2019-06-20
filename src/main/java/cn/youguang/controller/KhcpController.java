@@ -33,6 +33,9 @@ import java.util.Map;
 @Api(value = "khcpController", tags = {"客户产品操作接口"})
 public class KhcpController {
 
+    private Long khId;
+    private Long cpId;
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -127,9 +130,38 @@ public class KhcpController {
             result.setMsg("删除成功！");
             result.setSuccess(true);
         } catch (RuntimeException e) {
-            LOGGER.error("删除用户失败：{}", e);
+            LOGGER.error("删除失败：{}", e);
             result.setMsg(e.getMessage());
 
+        }
+        return result;
+    }
+
+
+    /**
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/checkKhcpYxq", method = RequestMethod.GET)
+    @ResponseBody
+    public Result checkKhcpYxq(@RequestParam Long khId, @RequestParam Long cpId) {
+        this.khId = khId;
+        this.cpId = cpId;
+        Result result = new Result();
+        try {
+            Kh kh = khService.findById(khId);
+            Cp cp = cpService.findById(cpId);
+            Date now = new Date();
+            List<Khcp> khcps = khcpService.findByKhAndCpAnAndStarttimeAfterAndStoptimeBefore(kh, cp, now, now);
+
+            if (khcps != null && khcps.size() > 0) {
+                result.setSuccess(true);
+                result.setMsg("客户产品在有效期内");
+                result.setObj(khcps);
+            }
+
+        } catch (RuntimeException e) {
+            result.setMsg(e.getMessage());
         }
         return result;
     }

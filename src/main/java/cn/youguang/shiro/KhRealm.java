@@ -71,7 +71,7 @@ public class KhRealm extends AuthorizingRealm {
         }
 
         // 认证缓存信息
-        AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(kh.getId(), kh.getLoginpass(), getName());
+        AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(kh.getWybs(), kh.getLoginpass(), getName());
 
         //  this.setSession("currentUser", user);
         return authcInfo;

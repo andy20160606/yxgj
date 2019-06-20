@@ -9,6 +9,8 @@ public class LoginDto {
     private String password;
     private String verifycode;
 
+    private Boolean rememberMe;
+
 
     public String getWxcode() {
         return wxcode;
@@ -49,6 +51,15 @@ public class LoginDto {
 
     public void setVerifycode(String verifycode) {
         this.verifycode = verifycode;
+    }
+
+
+    public Boolean getRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(Boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 
     @Override

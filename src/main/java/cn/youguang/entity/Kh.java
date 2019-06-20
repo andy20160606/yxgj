@@ -32,6 +32,8 @@ public class Kh extends IdEntity {
 
     private String khbm; //客户编码
 
+    private String lsrzm;//临时认证码 仅在每次登录时可用并且更新
+
 
 
 
@@ -111,10 +113,13 @@ public class Kh extends IdEntity {
         this.khbm = khbm;
     }
 
+    public String getLsrzm() {
+        return lsrzm;
+    }
 
-
-
-
+    public void setLsrzm(String lsrzm) {
+        this.lsrzm = lsrzm;
+    }
 
     @Override
     public String toString() {

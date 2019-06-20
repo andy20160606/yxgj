@@ -95,6 +95,7 @@ public class YhqService {
         yhq.setJsrq(yhhd.getJsrq());
         yhq.setYhhd(yhhd);
         yhq.setUser(user);
+        yhq.setYxzt(0);
         yhq.setYhm(System.currentTimeMillis() + "");
         return yhq;
     }

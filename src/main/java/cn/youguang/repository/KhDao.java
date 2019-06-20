@@ -33,4 +33,8 @@ public interface KhDao extends JpaRepository<Kh, Long> {
     Page<Kh> findByType(Integer type, Pageable pageable);
 
     Page<Kh> findBySjhmContainingAndType(String sjhm, Integer type, Pageable pageable);
+
+    Kh findByWybsAndLsrzm(String wybs, String lsrzm);
+
+    Kh findByWybs(String wybs);
 }

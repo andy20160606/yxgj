@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,7 +71,7 @@ public class KhService {
         } else if (type != null && StringUtils.isNotBlank(khmc)) {
             khs = khDao.findByKhmcContainingAndType(khmc, type, pageInfo.getPagerequest());
         } else if (type != null && StringUtils.isNotBlank(sjhm)) {
-            khs = khDao.findBySjhmContainingAndType(sjhm, type,pageInfo.getPagerequest());
+            khs = khDao.findBySjhmContainingAndType(sjhm, type, pageInfo.getPagerequest());
         } else if (type != null) {
             khs = khDao.findByType(type, pageInfo.getPagerequest());
         } else if (StringUtils.isNotBlank(sjhm) && StringUtils.isNotBlank(khmc)) {
@@ -131,5 +132,16 @@ public class KhService {
 
     public Kh findByLoginname(String loginname) {
         return khDao.findByLoginname(loginname);
+    }
+
+    public Kh findbyWybsAndLsrzm(@NotNull String khwybs, @NotNull String lsrzm) {
+
+        return khDao.findByWybsAndLsrzm(khwybs, lsrzm);
+
+
+    }
+
+    public Kh findByWybs(String wybs) {
+        return khDao.findByWybs(wybs);
     }
 }

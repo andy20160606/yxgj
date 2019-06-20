@@ -299,10 +299,10 @@ public class CpddController {
                 cpdd.setYhhd(yhhd);
             }
             cpdd.setXdsj(new Date());
-            cpdd = cpddService.save(cpdd);
             cpdd.setYdzt(0);
             cpdd.setActive(1);
             cpdd.setRydzt(0);
+            cpdd = cpddService.save(cpdd);
             result.setObj(cpdd);
             result.setSuccess(true);
         } catch (Exception e) {
@@ -358,7 +358,7 @@ public class CpddController {
             result.setMsg("隐藏成功！");
             result.setSuccess(true);
         } catch (RuntimeException e) {
-            LOGGER.error("隐藏成功：{}", e);
+            LOGGER.error("隐藏失败：{}", e.toString());
             result.setMsg(e.getMessage());
 
         }

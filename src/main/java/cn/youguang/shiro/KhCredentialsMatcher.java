@@ -11,6 +11,8 @@ import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.UUID;
+
 public class KhCredentialsMatcher extends SimpleCredentialsMatcher {
 
 
@@ -32,6 +34,8 @@ public class KhCredentialsMatcher extends SimpleCredentialsMatcher {
             Kh kh = khService.findByLoginnameAndLoginpass(user, pass);
 
             if (kh != null) {
+                kh.setLsrzm(UUID.randomUUID().toString());
+                khService.save(kh);
                 return true;
             }
         } catch (Exception e) {

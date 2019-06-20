@@ -102,40 +102,6 @@ public class LoginController {
 
 
     /**
-     * GET 登录
-     *
-     * @param model
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/wxlogin", method = RequestMethod.GET)
-    public String login(Model model, HttpServletRequest request) {
-//        LOGGER.info("GET请求登录");
-//        if (SecurityUtils.getSubject().isAuthenticated()) {
-//            return "redirect:/index";
-//        }
-
-
-        return "/Mall/Login";
-    }
-
-
-    @RequestMapping(value = "mylogin", method = RequestMethod.GET)
-    @ResponseBody
-    public Result mylogin(@RequestParam(required = false) String wxcode, @RequestParam(required = false) String verifycode, @RequestParam(required = false) String username, @RequestParam String password, @RequestParam(required = false) String logintype, HttpServletRequest httpServletRequest) {
-
-
-        LoginDto loginDto = new LoginDto();
-        loginDto.setWxcode(wxcode);
-        loginDto.setLogintype(logintype);
-        loginDto.setPassword(username);
-        loginDto.setUsername(password);
-        loginDto.setVerifycode(verifycode);
-        return loginPost(loginDto);
-
-    }
-
-    /**
      * POST 登录 shiro 写法
      *
      * @param username 用户名
@@ -177,7 +143,6 @@ public class LoginController {
                         userdb = userService.saveUser(userdb);
                     }
                     token = new MyUsernamePasswordToken(userdb.getWxopenid(), userdb.getWxopenid(), logintype);
-                    token.setRememberMe(true);
                     user.login(token);
                 } else {
                     result.setMsg("微信获取信息失败");
@@ -208,7 +173,7 @@ public class LoginController {
 
                 userdb = userService.findUserByLoginName(username);
                 token = new MyUsernamePasswordToken(username.trim(), password.trim(), logintype);
-                token.setRememberMe(true);
+                token.setRememberMe(loginDto.getRememberMe() == null ? false : loginDto.getRememberMe());
                 user.login(token);
             }
             if ("khlogin".equals(logintype)) {
@@ -224,6 +189,7 @@ public class LoginController {
 
                 Kh kh = khService.findByLoginnameAndLoginpass(username, password);
                 token = new MyUsernamePasswordToken(username, password, logintype);
+                token.setRememberMe(loginDto.getRememberMe() == null ? false : loginDto.getRememberMe());
                 user.login(token);
                 result.setSuccess(true);
                 result.setObj(kh);
@@ -244,7 +210,7 @@ public class LoginController {
             result.setMsg("密码错误");
             return result;
         } catch (Exception e) {
-            result.setMsg("登录失败{ " + e.getMessage() +"}");
+            result.setMsg("登录失败{ " + e.getMessage() + "}");
             return result;
         }
         result.setSuccess(true);
@@ -301,6 +267,20 @@ public class LoginController {
         result.setSuccess(true);
         return result;
     }
+    /**
+     * 强制踢出的跳转信息
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/kickout", method = RequestMethod.GET)
+    @ResponseBody
+    public Result kickout() {
+        Result result = new Result();
+        result.setMsg("您已在其他地方登录，此地已被踢出登录");
+        result.setSuccess(false);
+        return result;
+    }
 
 
     @RequestMapping(value = "/verifyCode", method = RequestMethod.GET)
@@ -322,4 +302,29 @@ public class LoginController {
     }
 
 
+    @RequestMapping(value = "/khLsrz", method = RequestMethod.GET)
+    @ResponseBody
+    public Result khLsrz(@RequestParam String khwybs, @RequestParam String lsrzm) {
+        Result result = new Result();
+
+        try {
+
+            Kh kh = khService.findbyWybsAndLsrzm(khwybs, lsrzm);
+            if (kh != null) {
+                result.setSuccess(true);
+                result.setObj(kh);
+                result.setMsg("认证成功");
+            } else {
+                result.setMsg("认证失败");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
 }
+

@@ -1,18 +1,12 @@
 package cn.youguang.controller;
 
 
-import cn.youguang.entity.Cp;
-import cn.youguang.entity.User;
-import cn.youguang.service.CpService;
-import cn.youguang.util.PageInfo;
+import cn.youguang.util.QRCodeKit;
+import cn.youguang.util.QrCodeCreateUtil;
 import cn.youguang.util.Result;
-import cn.youguang.util.StringUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -25,15 +19,21 @@ import weixin.popular.bean.token.Token;
 import weixin.popular.util.JsUtil;
 import weixin.popular.util.JsonUtil;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @description：微信信息获取接口
  */
 @Controller
 @RequestMapping("/wx")
-@Api(value = "微信Controller",tags = {"微信操作接口"})
+@Api(value = "微信Controller", tags = {"微信操作接口"})
 public class WxController {
 
 
@@ -41,6 +41,10 @@ public class WxController {
     private String appid;
     @Value("${wx.secret}")
     private String secret;
+
+    @Value("${file.UploadDir}")
+    private String filePath;
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -57,13 +61,13 @@ public class WxController {
     public Result getJsCfgByUrl(@RequestParam String url) {
         Result result = new Result();
         try {
-            Token token = TokenAPI.token(appid,secret);
+            Token token = TokenAPI.token(appid, secret);
             Ticket ticket = TicketAPI.ticketGetticket(token.getAccess_token());
-            String jsCfg = JsUtil.generateConfigJson(ticket.getTicket(),true,appid,url,null);
-            HashMap<String,String> jsCfgMap = JsonUtil.parseObject(jsCfg,HashMap.class);
+            String jsCfg = JsUtil.generateConfigJson(ticket.getTicket(), true, appid, url, null);
+            HashMap<String, String> jsCfgMap = JsonUtil.parseObject(jsCfg, HashMap.class);
             result.setObj(jsCfgMap);
             result.setSuccess(true);
-        } catch (Exception e){
+        } catch (Exception e) {
             result.setSuccess(false);
             result.setMsg(e.getMessage());
         }
@@ -72,6 +76,33 @@ public class WxController {
     }
 
 
+    @RequestMapping(value = "/shareQrcodeByContent", method = RequestMethod.GET)
+    public void shareQrcodeByContent(@RequestParam String content, HttpServletResponse response) {
+        try {
+            BufferedImage bufferedImage = QrCodeCreateUtil.createQrCode(content);
+            ServletOutputStream out = response.getOutputStream();
+            ImageIO.write(bufferedImage, "png", out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @RequestMapping(value = "/createQRCodeWithLogo", method = RequestMethod.GET)
+    public void shareQrcodeByContent(@RequestParam String content, @RequestParam String fileName, HttpServletResponse response) {
+        try {
+
+
+            File logoFile = new File(filePath + fileName);
+            BufferedImage bufferedImage = QRCodeKit.createQRCodeWithLogo(content, logoFile);
+
+
+            ServletOutputStream out = response.getOutputStream();
+            ImageIO.write(bufferedImage, "png", out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

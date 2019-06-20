@@ -9,6 +9,7 @@ import cn.youguang.util.Result;
 import cn.youguang.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.Subject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @description：状态管理
@@ -64,12 +67,15 @@ public class KhController {
 
 
             Kh khdb = khService.findByLoginname(kh.getLoginname());
+
+
             if (khdb != null) {
                 result.setMsg("客户登录名重复不可添加");
                 return result;
             }
             //    ztService.save(zt);
             kh.setLoginpass("123456");
+            kh.setWybs(UUID.randomUUID().toString());
             khService.save(kh);
             result.setSuccess(true);
         } catch (Exception e) {
@@ -110,6 +116,7 @@ public class KhController {
         return result;
 
     }
+
     /**
      * 修改客户密码 通过用户名
      *
@@ -123,9 +130,9 @@ public class KhController {
         try {
 
             Kh khdb = khService.findByLoginname(modLoginpassDto.getLoginname());
-            if(khdb == null){
+            if (khdb == null) {
                 result.setMsg("没有该用户，请确认用户名");
-                return  result;
+                return result;
             }
 
 
@@ -199,7 +206,7 @@ public class KhController {
     @ApiOperation(value = "分页获取用户信息", notes = "")
     @RequestMapping(value = "findDataTables", method = RequestMethod.GET)
     @ResponseBody
-    public Result findDataTables(@RequestParam(required = false) Integer type,@RequestParam(required = false) String khmc, @RequestParam(required = false) String sjhm, @ModelAttribute PageInfo pageInfo) {
+    public Result findDataTables(@RequestParam(required = false) Integer type, @RequestParam(required = false) String khmc, @RequestParam(required = false) String sjhm, @ModelAttribute PageInfo pageInfo) {
 
         Result result = new Result();
         Map<String, Object> condition = new HashMap<String, Object>();
@@ -210,8 +217,8 @@ public class KhController {
         if (StringUtils.isNotBlank(sjhm)) {
             condition.put("sjhm", sjhm.trim());
         }
-        if(type != null){
-            condition.put("type",type);
+        if (type != null) {
+            condition.put("type", type);
         }
         pageInfo.setCondition(condition);
 
@@ -246,6 +253,32 @@ public class KhController {
         } catch (Exception e) {
             result.setMsg(e.getMessage());
         }
+        return result;
+
+    }
+
+
+    /**
+     * 得到当前登录用户
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getCurrentLoginKh", method = RequestMethod.GET)
+    @ResponseBody
+    public Result getCurLoginKh() {
+
+        Result result = new Result();
+        try {
+            String wybs = (String) SecurityUtils.getSubject().getPrincipal();
+            //    ztService.save(zt);
+            Kh kh = khService.findByWybs(wybs);
+            result.setSuccess(true);
+            result.setObj(kh);
+        } catch (Exception e) {
+            result.setMsg(e.getMessage());
+
+        }
+
         return result;
 
     }

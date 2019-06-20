@@ -1,6 +1,7 @@
 
 package cn.youguang.service;
 
+import cn.youguang.entity.Cp;
 import cn.youguang.entity.Kh;
 import cn.youguang.entity.Khcp;
 import cn.youguang.entity.Zt;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -67,5 +69,9 @@ public class KhcpService {
     public List<Khcp> findByKhId(Long khId) {
         Kh kh = khDao.findOne(khId);
         return khcpDao.findByKh(kh);
+    }
+
+    public List<Khcp> findByKhAndCpAnAndStarttimeAfterAndStoptimeBefore(Kh kh, Cp cp, Date starttime, Date stoptime) {
+        return khcpDao.findByKhAndCpAndStarttimeBeforeAndStoptimeAfter(kh, cp, starttime, stoptime);
     }
 }
