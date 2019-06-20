@@ -46,6 +46,11 @@ public class UserRealm extends AuthorizingRealm {
         // 从数据库中获取当前登录用户的详细信息
         System.out.println("从数据库中获取当前登录用户的详细信息");
         User user = userService.findUserById((Long) super.getAvailablePrincipal(principals));
+
+
+        String loginType = (String) SecurityUtils.getSubject().getSession().getAttribute("logintype");
+
+
         //System.out.println("当前登录用户信息="+user);
         if (null != user) {
             // 实体类User中包含有用户角色的实体类信息
@@ -67,6 +72,8 @@ public class UserRealm extends AuthorizingRealm {
                     }
                 }
             }
+
+
         } else {
             throw new AuthorizationException();
         }
@@ -74,6 +81,10 @@ public class UserRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo simpleAuthorInfo = new SimpleAuthorizationInfo();
         simpleAuthorInfo.addRoles(roleList);
         simpleAuthorInfo.addStringPermissions(permissionList);
+
+
+        simpleAuthorInfo.addRole(loginType);
+
         // 实际中可能会像上面注释的那样从数据库取得
         // 权限授权时可使用通配符，或前缀匹配
 //		simpleAuthorInfo.addStringPermission("/user/delete");
@@ -118,7 +129,7 @@ public class UserRealm extends AuthorizingRealm {
         // 认证缓存信息
         AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getId(), user.getLoginpass(), getName());
 
-        //  this.setSession("currentUser", user);
+        this.setSession("logintype", loginType);
         return authcInfo;
 
         // 没有返回登录用户名对应的SimpleAuthenticationInfo对象时,就会在LoginController中抛出UnknownAccountException异常

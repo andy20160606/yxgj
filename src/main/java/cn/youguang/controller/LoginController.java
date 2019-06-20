@@ -9,13 +9,11 @@ import cn.youguang.service.UserService;
 import cn.youguang.shiro.MyUsernamePasswordToken;
 import cn.youguang.util.Result;
 import cn.youguang.util.VerifyCodeUtil;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +28,7 @@ import weixin.popular.api.SnsAPI;
 import weixin.popular.bean.sns.SnsToken;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
@@ -143,6 +139,7 @@ public class LoginController {
                         userdb = userService.saveUser(userdb);
                     }
                     token = new MyUsernamePasswordToken(userdb.getWxopenid(), userdb.getWxopenid(), logintype);
+                    user.getSession().setTimeout(1000 * 60 * 60 * 24);
                     user.login(token);
                 } else {
                     result.setMsg("微信获取信息失败");
@@ -267,6 +264,7 @@ public class LoginController {
         result.setSuccess(true);
         return result;
     }
+
     /**
      * 强制踢出的跳转信息
      *
@@ -274,12 +272,9 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "/kickout", method = RequestMethod.GET)
-    @ResponseBody
-    public Result kickout() {
-        Result result = new Result();
-        result.setMsg("您已在其他地方登录，此地已被踢出登录");
-        result.setSuccess(false);
-        return result;
+    public String kickout() {
+
+        return "/ptloginKickout.html";
     }
 
 

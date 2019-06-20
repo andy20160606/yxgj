@@ -160,10 +160,10 @@ public class ShiroCfg {
         filterChainDefinitionMap.put("/Mall/js/**", "anon");
         filterChainDefinitionMap.put("/Mall/image/**", "anon");
         filterChainDefinitionMap.put("/Mall/image/**/**", "anon");
-        filterChainDefinitionMap.put("/Mall/image/**/**", "anon");
         filterChainDefinitionMap.put("/Mall/newer.html", "anon");//新手必读
         filterChainDefinitionMap.put("/Mall/sussecc.html", "anon");//成功案例
         filterChainDefinitionMap.put("/Mall/about.html", "anon");//关于我们
+        filterChainDefinitionMap.put("/ptloginKickout.html", "anon"); //踢出页面
         filterChainDefinitionMap.put("/product/login.html", "anon");
         filterChainDefinitionMap.put("/product/css/**", "anon");
         filterChainDefinitionMap.put("/product/fonts/**", "anon");
@@ -180,13 +180,12 @@ public class ShiroCfg {
         filterChainDefinitionMap.put("/ptlogin/**", "anon");
         filterChainDefinitionMap.put("/mylogin/**", "anon");
         filterChainDefinitionMap.put("/login", "anon");
-        filterChainDefinitionMap.put("/kickout", "anon");
         filterChainDefinitionMap.put("/wxlogin", "anon");
         filterChainDefinitionMap.put("/verifyCode", "anon");
         filterChainDefinitionMap.put("/checkKhcpYxq", "anon");//外部校验客户产品有效期
         filterChainDefinitionMap.put("/khLsrz", "anon");//子系统客户临时认证
-        filterChainDefinitionMap.put("/**", "user,kickout");
-//         filterChainDefinitionMap.put("/**", "authc");
+//        filterChainDefinitionMap.put("/**", "user,kickout");
+        filterChainDefinitionMap.put("/**", "user");
         //       filterChainDefinitionMap.put("/**", " authc");
 //        filterChainDefinitionMap.put("/js*//**//**", "anon");
         shiroFilterFactoryBean
