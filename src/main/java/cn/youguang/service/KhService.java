@@ -134,7 +134,7 @@ public class KhService {
         return khDao.findByLoginname(loginname);
     }
 
-    public Kh findbyWybsAndLsrzm(@NotNull String khwybs, @NotNull String lsrzm) {
+    public Kh findbyWybsAndLsrzm(String khwybs, String lsrzm) {
 
         return khDao.findByWybsAndLsrzm(khwybs, lsrzm);
 

@@ -148,6 +148,7 @@ public class ShiroCfg {
         shiroFilterFactoryBean.getFilters().put("kickout", kscf);
 
 
+        //       shiroFilterFactoryBean.setLoginUrl("/loginRedirect.html");
         shiroFilterFactoryBean.setLoginUrl("/login");
 //        shiroFilterFactoryBean.setSuccessUrl("/index");
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauth");
@@ -184,8 +185,8 @@ public class ShiroCfg {
         filterChainDefinitionMap.put("/verifyCode", "anon");
         filterChainDefinitionMap.put("/checkKhcpYxq", "anon");//外部校验客户产品有效期
         filterChainDefinitionMap.put("/khLsrz", "anon");//子系统客户临时认证
-//        filterChainDefinitionMap.put("/**", "user,kickout");
-        filterChainDefinitionMap.put("/**", "user");
+        filterChainDefinitionMap.put("/**", "user,kickout");
+//        filterChainDefinitionMap.put("/**", "user");
         //       filterChainDefinitionMap.put("/**", " authc");
 //        filterChainDefinitionMap.put("/js*//**//**", "anon");
         shiroFilterFactoryBean

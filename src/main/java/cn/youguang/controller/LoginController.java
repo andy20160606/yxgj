@@ -24,6 +24,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 import weixin.popular.api.SnsAPI;
 import weixin.popular.bean.sns.SnsToken;
 
@@ -66,16 +68,6 @@ public class LoginController {
         return "login";
     }
 
-    /**
-     * 首页
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(Model model) {
-        return "/Mall/Login";
-    }
 
     /**
      * GET 登录
@@ -85,14 +77,13 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     @ResponseBody
     public Result login() {
-//        LOGGER.info("GET请求登录");
-//        if (SecurityUtils.getSubject().isAuthenticated()) {
-//            return "redirect:/index";
-//        }
-        Result result = new Result();
-        result.setSuccess(false);
-        result.setMsg("请进行登录操作");
 
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("loginRedirect.html");
+
+//        return "loginRedirect";
+        Result result = new Result();
+        result.setMsg("请进行登录操作");
         return result;
     }
 
@@ -139,7 +130,8 @@ public class LoginController {
                         userdb = userService.saveUser(userdb);
                     }
                     token = new MyUsernamePasswordToken(userdb.getWxopenid(), userdb.getWxopenid(), logintype);
-                    user.getSession().setTimeout(1000 * 60 * 60 * 24);
+                    user.getSession().setTimeout(1000 * 60 * 60 * 24); //24小时
+
                     user.login(token);
                 } else {
                     result.setMsg("微信获取信息失败");
@@ -171,6 +163,7 @@ public class LoginController {
                 userdb = userService.findUserByLoginName(username);
                 token = new MyUsernamePasswordToken(username.trim(), password.trim(), logintype);
                 token.setRememberMe(loginDto.getRememberMe() == null ? false : loginDto.getRememberMe());
+
                 user.login(token);
             }
             if ("khlogin".equals(logintype)) {
